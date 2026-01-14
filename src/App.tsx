@@ -1,51 +1,36 @@
 import { useState } from "preact/hooks";
-import preactLogo from "./assets/preact.svg";
-import { invoke } from "@tauri-apps/api/core";
+import { ConnectionManager } from "./components/ConnectionManager";
+import { QueryRunner } from "./components/QueryRunner";
 import "./App.css";
 
 function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+  const [activeConnectionId, setActiveConnectionId] = useState<string | null>(null);
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name }));
-  }
+  // Prevent default context menu for more app-like feel
+  // useEffect(() => {
+  //   document.addEventListener('contextmenu', event => event.preventDefault());
+  // }, []);
 
   return (
-    <main class="w-svw p-2 dark">
-      <h1>Welcome to Tauri + Preact</h1>
-      <h1 class="text-3xl font-bold underline bg-amber-50 dark:bg-amber-900">
-        Hello world!
-      </h1>
-      <div class="row">
-        <a href="https://vite.dev" target="_blank" class="dark:text-white">
-          <img src="/vite.svg" class="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" class="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://preactjs.com" target="_blank">
-          <img src={preactLogo} class="logo preact" alt="Preact logo" />
-        </a>
-      </div>
-      <p>Click on the Tauri, Vite, and Preact logos to learn more.</p>
+    <main class="h-screen w-screen flex overflow-hidden bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 font-sans">
+      <ConnectionManager
+        onConnect={(id) => setActiveConnectionId(id)}
+        activeId={activeConnectionId || undefined}
+      />
 
-      <form
-        class="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onInput={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg}</p>
+      <div class="flex-1 flex flex-col h-full relative z-0 overflow-hidden">
+        {activeConnectionId ? (
+          <QueryRunner connectionId={activeConnectionId} />
+        ) : (
+          <div class="flex-1 flex flex-col items-center justify-center text-zinc-400 bg-zinc-50/50 dark:bg-zinc-900/50">
+            <div class="w-16 h-16 mb-4 rounded-xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-database-zap opacity-50"><ellipse cx="12" cy="5" rx="9" ry="3" /><path d="M3 5V19A9 3 0 0 0 15 21.84" /><path d="M21 5V8" /><path d="M21 12L18 17H22L19 22" /></svg>
+            </div>
+            <p class="font-medium">No Connection Active</p>
+            <p class="text-sm opacity-70 mt-1">Connect to a database using the sidebar.</p>
+          </div>
+        )}
+      </div>
     </main>
   );
 }
