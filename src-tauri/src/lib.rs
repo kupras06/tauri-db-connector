@@ -14,10 +14,10 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .manage(AppState::new())
         .invoke_handler(tauri::generate_handler![
-            greet, 
-            db::connect, 
-            db::disconnect, 
-            db::execute, 
+            greet,
+            db::connect,
+            db::disconnect,
+            db::execute,
             db::get_tables
         ])
         .run(tauri::generate_context!())

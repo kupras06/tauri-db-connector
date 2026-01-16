@@ -1,18 +1,18 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "tauri-db-connector",
+  "productName": "db-connector",
   "version": "0.1.0",
-  "identifier": "com.prashanthkumar.tauri-db-connector",
+  "identifier": "com.prashanthkumar.db-connector",
   "build": {
     "beforeDevCommand": "pnpm dev",
     "devUrl": "http://localhost:1420",
     "beforeBuildCommand": "pnpm build",
-    "frontendDist": "../dist"
+    "frontendDist": "../build"
   },
   "app": {
     "windows": [
       {
-        "title": "tauri-db-connector",
+        "title": "db-connector",
         "width": 800,
         "height": 600
       }
